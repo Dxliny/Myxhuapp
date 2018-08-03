@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.dao.IDynamicDao">
+    <resultMap id="BaseResultMap" type="com.app.entity.Dynamic">
+        <id column="dynamic_id" property="dynamic_id"  jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result column="title" property="title" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="introduce" property="introduce" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="picture" property="picture" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="user_id_f" property="user_id_f" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result column="dynamic_type" property="dynamic_type" jdbcType="INTEGER" javaType="boolean"/>
+        <result column="address" property="address" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="prize" property="prize" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result column="look_persons" property="look_persons" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result column="little_introduce" property="little_introduce" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <!--<result property="interest_id_f" column="interest_id_f" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+    </resultMap>
+
+    <sql id="dynamic_Base_column_List">
+        dynamic_id,title,introduce,picture,user_id_f,dynamic_type,address,prize,look_persons,little_introduce<!--,interest_id_f-->
+    </sql>
+
+    <select id="findDynamicById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+          <include refid="dynamic_Base_column_List"/>
+        FROM
+          tb_dynamic
+        WHERE
+          dynamic_id = #{dynamic_id}
+    </select>
+    <select id="findisDynamic" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        SELECT
+          dynamic_id
+        from
+          tb_dynamic
+        WHERE
+          dynamic_id = #{dynamic_id}
+    </select>
+    <select id="findAllDynamicByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="dynamic_Base_column_List"/>
+        FROM
+        tb_dynamic
+        where
+        user_id_f = #{user_id_f}
+    </select>
+    <select id="findPicturePathByIDd" resultType="java.lang.String" parameterType="java.lang.Integer">
+        SELECT
+          picture
+        FROM
+          tb_dynamic
+        WHERE
+          dynamic_id = #{dynamic_id}
+    </select>
+    <select id="findAllDynamicByType" resultMap="BaseResultMap" parameterType="boolean">
+        SELECT
+          <include refid="dynamic_Base_column_List"/>
+        FROM
+        tb_dynamic
+        WHERE
+          dynamic_type = #{dynamic_type}
+    </select>
+
+    <select id="findDynamicByUserIdAndType" resultMap="BaseResultMap" parameterType="com.app.entity.Dynamic">
+        SELECT
+          <include refid="dynamic_Base_column_List"/>
+        FROM
+        tb_dynamic
+        WHERE
+          user_id_f = #{user_id_f} and dynamic_type = #{dynamic_type}
+    </select>
+
+    <!--<select id="findIdLookPersonsInterestIdByUser_id" parameterType="java.lang.Integer" resultMap="BaseResultMap">-->
+      <!--SELECT-->
+        <!--dynamic_id,look_persons,interest_id_f-->
+      <!--from-->
+        <!--tb_dynamic-->
+      <!--WHERE-->
+        <!--user_id_f = #{user_id_f}-->
+    <!--</select>-->
+
+
+    <!--<select id="findInterest_Id_fById" parameterType="java.lang.Integer" resultType="java.lang.Integer">-->
+      <!--SELECT-->
+        <!--interest_id_f-->
+      <!--FROM-->
+        <!--tb_dynamic-->
+      <!--WHERE-->
+        <!--dynamic_id = #{dynamic_id}-->
+    <!--</select>-->
+
+
+    <insert id="insertOneDynamic" parameterType="com.app.entity.Dynamic">
+
+        <selectKey keyProperty="dynamic_id" resultType="int" order="AFTER">
+            SELECT last_insert_id()
+        </selectKey>
+
+        INSERT INTO
+          tb_dynamic(title,introduce,picture,user_id_f,dynamic_type,address,prize,look_persons,little_introduce,interest_id_f)
+        VALUES
+          (#{title},#{introduce},#{picture},#{user_id_f},#{dynamic_type},#{address},#{prize},#{look_persons},#{little_introduce},#{interest_id_f})
+    </insert>
+
+    <insert id="modifyPicById" parameterType="com.app.entity.Dynamic">
+        UPDATE
+          tb_dynamic
+        SET
+          picture = #{picture}
+        WHERE
+          dynamic_id = #{dynamic_id}
+    </insert>
+
+    <update id="modifyDynamicById" parameterType="com.app.entity.Dynamic">
+        UPDATE
+          tb_dynamic
+        set
+          title = #{title} ,introduce = #{introduce},address = #{address},
+          prize = #{prize},look_persons = #{look_persons},little_introduce = #{little_introduce}
+        WHERE
+          dynamic_id = #{dynamic_id}
+    </update>
+
+    <delete id="deleteOneDynamicById" parameterType="java.lang.Integer">
+        DELETE FROM
+          tb_dynamic
+        WHERE
+          dynamic_id = #{dynamic_id}
+    </delete>
+</mapper>
